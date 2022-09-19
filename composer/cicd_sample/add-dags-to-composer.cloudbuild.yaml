@@ -22,6 +22,6 @@ steps:
   # run
   - name: python
     entrypoint: python
-    args: ["composer/cicd_sample/utils/add_dags_to_composer.py", "--dags_directory=${_DAGS_DIRECTORY}", "--dags_bucket=${_DAGS_BUCKET}", "--name_replacement=${_NAME_REPLACEMENT}", "--gcs_prefix=${_GCS_PPREFIX}"]
+    args: ["composer/cicd_sample/utils/add_dags_to_composer.py", "--dags_directory=${_DAGS_DIRECTORY}", "--dags_bucket=${_DAGS_BUCKET}", "--name_replacement=${_NAME_REPLACEMENT}", "--gcs_prefix=${_GCS_PREFIX}"]
 
 # [END composer_cicd_dagsync_yaml]
