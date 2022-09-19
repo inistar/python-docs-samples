@@ -32,6 +32,9 @@ def _create_dags_list(dags_directory: str) -> Tuple[str, List[str]]:
 
     # Copy everything but the ignored files to a temp directory
     copytree(dags_directory, f"{temp_dir}/", ignore=files_to_ignore, dirs_exist_ok=True)
+    
+    arr = os.listdir(f"{temp_dir}/")
+    print("\n".join(arr))
 
     # The only Python files left in our temp directory are DAG files
     # so we can exclude all non Python files
