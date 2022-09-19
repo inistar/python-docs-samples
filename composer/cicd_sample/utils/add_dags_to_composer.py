@@ -43,7 +43,7 @@ def _create_dags_list(dags_directory: str) -> Tuple[str, List[str]]:
 
 
 def upload_dags_to_composer(
-    dags_directory: str, bucket_name: str, name_replacement: str = "dags/"
+    dags_directory: str, bucket_name: str, name_replacement: str = "dags/", gcs_prefix: str = "test/"
 ) -> None:
     """
     Given a directory, this function moves all DAG files from that directory
@@ -70,7 +70,9 @@ def upload_dags_to_composer(
 
             try:
                 # Upload to your bucket
-                blob = bucket.blob(dag)
+                dag_name = str(dag).split('/')[-1]
+                blob = bucket.blob(f"{gcs_prefix}/{dag_name}")
+                
                 blob.upload_from_filename(dag)
                 print(f"File {dag} uploaded to {bucket_name}/{dag}.")
             except FileNotFoundError:
@@ -100,8 +102,12 @@ if __name__ == "__main__":
         "--name_replacement",
         help="Name of the prefix to DAGs in GitHub Repo",
     )
+    parser.add_argument(
+        "--gcs_prefix",
+        help="Name of the GCS prefix as the DEST blob name"
+    )
 
     args = parser.parse_args()
 
-    upload_dags_to_composer(args.dags_directory, args.dags_bucket, args.name_replacement)
+    upload_dags_to_composer(args.dags_directory, args.dags_bucket, args.name_replacement, args.gcs_prefix)
 # [END composer_cicd_add_dags_to_composer_utility]
