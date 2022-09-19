@@ -96,8 +96,12 @@ if __name__ == "__main__":
         "--dags_bucket",
         help="Name of the DAGs bucket of your Composer environment without the gs:// prefix",
     )
+    parser.add_argument(
+        "--name_replacement",
+        help="Name of the prefix to DAGs in GitHub Repo",
+    )
 
     args = parser.parse_args()
 
-    upload_dags_to_composer(args.dags_directory, args.dags_bucket)
+    upload_dags_to_composer(args.dags_directory, args.dags_bucket, args.name_replacement)
 # [END composer_cicd_add_dags_to_composer_utility]
