@@ -67,7 +67,7 @@ def my_function():
     return 0
 
 with models.DAG(
-    'agency_1',
+    'example_2_dag_spoke_1',
     catchup=False,
     default_args=default_args,
     schedule_interval=datetime.timedelta(days=1)) as dag:
