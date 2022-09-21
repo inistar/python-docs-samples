@@ -33,38 +33,18 @@ default_args = {
     "start_date": YESTERDAY,
 }
 
-def get_secret(project_id, secret_id):
-    """
-    Get information about the given secret. This only returns metadata about
-    the secret container, not any secret material.
-    """
-
-    # Import the Secret Manager client library.
+def get_secret_data(project_id, secret_id, version_id):
     from google.cloud import secretmanager
-
-    # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
+    secret_detail = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
+    response = client.access_secret_version(request={"name": secret_detail})
+    data = response.payload.data.decode("UTF-8")
+    # print("Data: {}".format(data))
+    return data
 
-    # Build the resource name of the secret.
-    name = client.secret_path(project_id, secret_id)
+temp = get_secret_data("tn-data-dept2-test-proj", "spoke_1_airflow_variables", 'latest')
+print(temp)
 
-    # Get the secret.
-    response = client.get_secret(request={"name": name})
-
-    # Get the replication policy.
-    if "automatic" in response.replication:
-        replication = "AUTOMATIC"
-    elif "user_managed" in response.replication:
-        replication = "MANAGED"
-    else:
-        raise "Unknown replication {}".format(response.replication)
-
-    # Print data about the secret.
-    print("Got secret {} with replication policy {}".format(response.name, replication))
-    return response.name
-
-temp = get_secret("tn-data-dept2-test-proj", "spoke_1_airflow_variables")
-    
 with models.DAG(
     "composer_sample_dag_2",
     "catchup=False",
