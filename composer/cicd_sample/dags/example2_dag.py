@@ -44,7 +44,7 @@ def get_secret_data():
     from google.cloud import secretmanager
     client = secretmanager.SecretManagerServiceClient()
     secret_detail = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
-    response = client.access_secret_version(request={"name": secret_detail})
+    response = client.access_secret_version(secret_detail)
     data = response.payload.data.decode("UTF-8")
     # print("Data: {}".format(data))
     return data
