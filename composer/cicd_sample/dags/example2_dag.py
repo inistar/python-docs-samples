@@ -33,7 +33,7 @@ default_args = {
     "start_date": YESTERDAY,
 }
 
-/**
+'''
 def get_secret_data(project_id, secret_id, version_id):
     from google.cloud import secretmanager
     client = secretmanager.SecretManagerServiceClient()
@@ -45,7 +45,7 @@ def get_secret_data(project_id, secret_id, version_id):
 
 temp = get_secret_data("tn-data-dept2-test-proj", "spoke_1_airflow_variables", 'latest')
 print(temp)
-**/
+'''
 
 with models.DAG(
     "composer_sample_dag_2",
