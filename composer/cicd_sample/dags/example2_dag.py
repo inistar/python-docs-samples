@@ -33,6 +33,38 @@ default_args = {
     "start_date": YESTERDAY,
 }
 
+def get_secret(project_id, secret_id):
+    """
+    Get information about the given secret. This only returns metadata about
+    the secret container, not any secret material.
+    """
+
+    # Import the Secret Manager client library.
+    from google.cloud import secretmanager
+
+    # Create the Secret Manager client.
+    client = secretmanager.SecretManagerServiceClient()
+
+    # Build the resource name of the secret.
+    name = client.secret_path(project_id, secret_id)
+
+    # Get the secret.
+    response = client.get_secret(request={"name": name})
+
+    # Get the replication policy.
+    if "automatic" in response.replication:
+        replication = "AUTOMATIC"
+    elif "user_managed" in response.replication:
+        replication = "MANAGED"
+    else:
+        raise "Unknown replication {}".format(response.replication)
+
+    # Print data about the secret.
+    print("Got secret {} with replication policy {}".format(response.name, replication))
+    return response.name
+
+temp = get_secret("tn-data-dept2-test-proj", "spoke_1_airflow_variables")
+    
 with models.DAG(
     "composer_sample_dag_2",
     "catchup=False",
@@ -42,5 +74,5 @@ with models.DAG(
 
     # Print the dag_run id from the Airflow logs
     print_dag_run_conf = bash.BashOperator(
-        task_id="print_dag_run_conf", bash_command="echo {{ dag_run.id }} this is a test"
+        task_id="print_dag_run_conf", bash_command=f"echo spoke_1_airflow_variables: {temp}"
     )
