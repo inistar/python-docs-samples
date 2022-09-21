@@ -34,8 +34,13 @@ default_args = {
     "start_date": YESTERDAY,
 }
 
-'''
-def get_secret_data(project_id, secret_id, version_id):
+
+def get_secret_data():
+
+    project_id = "tn-data-dept2-test-proj"
+    secret_id = "spoke_1_airflow_variables"
+    version_id = 'latest'
+    
     from google.cloud import secretmanager
     client = secretmanager.SecretManagerServiceClient()
     secret_detail = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
@@ -44,10 +49,7 @@ def get_secret_data(project_id, secret_id, version_id):
     # print("Data: {}".format(data))
     return data
 
-temp = get_secret_data("tn-data-dept2-test-proj", "spoke_1_airflow_variables", 'latest')
-print(temp)
-
-
+'''
 with models.DAG(
     "composer_sample_dag_2",
     "catchup=False",
@@ -60,11 +62,12 @@ with models.DAG(
         task_id="print_dag_run_conf", bash_command="pip freeze"
         # echo spoke_1_airflow_variables: {temp}"
     )
-'''
+
 def my_function():
     print("hello world")
     print(foo)
     return 0
+'''
 
 with models.DAG(
     'example_2_dag_spoke_1',
@@ -75,6 +78,6 @@ with models.DAG(
     # Print the dag_run id from the Airflow logs
     t1 = PythonOperator(
         task_id='print',
-        python_callable= my_function,
+        python_callable= get_secret_data,
         dag=dag,
         )
