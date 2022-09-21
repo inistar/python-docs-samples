@@ -72,9 +72,9 @@ with models.DAG(
     default_args=default_args,
     schedule_interval=datetime.timedelta(days=1)) as dag:
 
-# Print the dag_run id from the Airflow logs
-t1 = PythonOperator(
-    task_id='print',
-    python_callable= my_function,
-    dag=dag,
-    )
+    # Print the dag_run id from the Airflow logs
+    t1 = PythonOperator(
+        task_id='print',
+        python_callable= my_function,
+        dag=dag,
+        )
