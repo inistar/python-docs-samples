@@ -16,6 +16,7 @@ import datetime
 
 from airflow import models
 from airflow.operators import bash
+from airflow.operators.python_operator import PythonOperator
 
 # If you are running Airflow in more than one time zone
 # see https://airflow.apache.org/docs/apache-airflow/stable/timezone.html
@@ -45,7 +46,7 @@ def get_secret_data(project_id, secret_id, version_id):
 
 temp = get_secret_data("tn-data-dept2-test-proj", "spoke_1_airflow_variables", 'latest')
 print(temp)
-'''
+
 
 with models.DAG(
     "composer_sample_dag_2",
@@ -58,4 +59,22 @@ with models.DAG(
     print_dag_run_conf = bash.BashOperator(
         task_id="print_dag_run_conf", bash_command="pip freeze"
         # echo spoke_1_airflow_variables: {temp}"
+    )
+'''
+def my_function():
+    print("hello world")
+    print(foo)
+    return 0
+
+with models.DAG(
+    'agency_1',
+    catchup=False,
+    default_args=default_args,
+    schedule_interval=datetime.timedelta(days=1)) as dag:
+
+# Print the dag_run id from the Airflow logs
+t1 = PythonOperator(
+    task_id='print',
+    python_callable= my_function,
+    dag=dag,
     )
